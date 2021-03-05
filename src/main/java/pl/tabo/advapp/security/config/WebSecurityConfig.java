@@ -46,6 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register").permitAll()
                 .antMatchers("/advertisement/home").permitAll()
                 .antMatchers("/advertisement/{id}").permitAll()
+                .antMatchers("/advertisement/searchbyrange").permitAll()
                 .antMatchers("/advertisement/addnew").hasAnyRole(Role.USER.name())
                 .anyRequest().authenticated()
                 .and().exceptionHandling().and().sessionManagement()

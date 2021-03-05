@@ -24,8 +24,8 @@ public class RegistrationController {
     }
 
     @ResponseStatus
-    @GetMapping("/confirm")
-    public ResponseEntity<?> confirm(@RequestParam("token") String token) throws Exception {
+    @PostMapping("/confirm")
+    public ResponseEntity<?> confirm(@RequestBody String token) throws Exception {
         try {
             return registrationService.confirmToken(token);
         } catch (TokenNotFoundException e) {

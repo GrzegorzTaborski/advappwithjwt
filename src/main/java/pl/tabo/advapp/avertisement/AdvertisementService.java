@@ -71,14 +71,24 @@ public class AdvertisementService {
         return advertisementDtoCon.convertToDto(advertisement);
     }
 
-    public List<AdvertisementDto> getByRange(Double uLat, Double uLon, Double range) {
+    public List<AdvertisementDto> getByRange(SearchRequest searchRequest) {
+        System.out.println(searchRequest);
         List<Advertisement> list = advertisementRepository.findAll();
         List<Advertisement> sorted = new ArrayList<>();
-
-        for (Advertisement adv : list) {
-            if (getRange(uLat, uLon, adv.getLatitude(), adv.getLongitude()) < range) sorted.add(adv);
+        if (searchRequest.getRange() >= 0) {
+            for (Advertisement adv : list) {
+                if (getRange(searchRequest.getUserLatitude(), searchRequest.getUserLongtitude(), adv.getLatitude(), adv.getLongitude()) < searchRequest.getRange())
+                    sorted.add(adv);
+            }
+            if (searchRequest.getTypeSelected() != null) {
+                return sorted.stream().map(a -> convertToDto(a)).filter(a -> a.getAdvertisementType().equals(searchRequest.getTypeSelected())).collect(Collectors.toList());
+            } else {
+                return sorted.stream().map(a -> convertToDto(a)).collect(Collectors.toList());
+            }
+        } else if (searchRequest.getTypeSelected() != null) {
+            return this.getAllDto().stream().filter(a -> a.getAdvertisementType().equals(searchRequest.getTypeSelected())).collect(Collectors.toList());
         }
-        return sorted.stream().map(a -> convertToDto(a)).collect(Collectors.toList());
+        return this.getAllDto();
     }
 
     private Double getRange(Double uLat, Double uLon, Double aLat, Double aLon) {
@@ -105,5 +115,12 @@ public class AdvertisementService {
 
     public void dleteById(Long id) {
         advertisementRepository.deleteById(id);
+    }
+
+    public List<AdvertisementDto> getAllByUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+        Optional<User> user = userRepository.findByEmail(userEmail);
+        return advertisementRepository.findAllByUser(user.get()).stream().map(a->convertToDto(a)).collect(Collectors.toList());
     }
 }

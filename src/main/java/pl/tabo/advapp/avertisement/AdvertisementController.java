@@ -25,9 +25,9 @@ public class AdvertisementController {
         return advertisementService.getById(id);
     }
 
-    @GetMapping("/{range}/{uLat}/{uLon}")
-    public List<AdvertisementDto> getByRange(@PathVariable Double range, @PathVariable Double uLat, @PathVariable Double uLon) {
-        return advertisementService.getByRange(uLat, uLon, range);
+    @PostMapping("/searchbyrange")
+    public List<AdvertisementDto> getByRange(@RequestBody SearchRequest searchRequest) {
+        return advertisementService.getByRange(searchRequest);
     }
 
     @GetMapping("/home")
@@ -50,5 +50,10 @@ public class AdvertisementController {
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable Long id) {
         advertisementService.dleteById(id);
+    }
+
+    @PostMapping("/getbyuser")
+    public List<AdvertisementDto> getAllByUser(){
+        return advertisementService.getAllByUser();
     }
 }

@@ -53,7 +53,7 @@ public class RegistrationService {
                     .body(new MessageResponse("Error: Email is already taken!!"));
         }
 
-        String link = "http://localhost:8090/register/confirm?token=" + token;
+        String link = "http://localhost:4200/confirm/" + token;
         emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
 
         return ResponseEntity
@@ -76,7 +76,9 @@ public class RegistrationService {
 
         confirmationTokenService.setConfirmedAt(token);
         userService.enableUser(confirmationToken.getUser().getEmail());
-        return ResponseEntity.ok("Confirmed");
+        return ResponseEntity
+                .ok()
+                .body(new MessageResponse("Confirmed"));
     }
 
     private String buildEmail(String name, String link) {
