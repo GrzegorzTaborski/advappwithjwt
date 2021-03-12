@@ -20,7 +20,7 @@ public class Advertisement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
     @Lob
