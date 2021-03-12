@@ -1,6 +1,7 @@
 package pl.tabo.advapp.login;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,7 +13,7 @@ import pl.tabo.advapp.util.JwtUtil;
 
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @CrossOrigin("http://localhost:4200")
 public class LoginController {
 

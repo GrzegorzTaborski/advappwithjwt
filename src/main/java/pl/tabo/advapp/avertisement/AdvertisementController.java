@@ -1,6 +1,7 @@
 package pl.tabo.advapp.avertisement;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @CrossOrigin("http://localhost:4200")
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/advertisement")
 public class AdvertisementController {
     private final AdvertisementService advertisementService;
@@ -56,4 +57,15 @@ public class AdvertisementController {
     public List<AdvertisementDto> getAllByUser(){
         return advertisementService.getAllByUser();
     }
+
+    @PostMapping("/close")
+    public ResponseEntity<?> setToUnAvtive(@RequestBody CloseRequest closeRequest){
+        System.out.println(closeRequest);
+        return advertisementService.setToUnActive(closeRequest);
+    }
+    @PutMapping("/update")
+    public ResponseEntity<?> update(@RequestBody AdvertisementDto advertisementDto){
+        return advertisementService.update(advertisementDto);
+    }
+
 }

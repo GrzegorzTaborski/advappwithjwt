@@ -1,11 +1,12 @@
 package pl.tabo.advapp.avertisement;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.tabo.advapp.exception.AdvertisementNotFoundException;
+import pl.tabo.advapp.registration.MessageResponse;
 import pl.tabo.advapp.user.User;
 import pl.tabo.advapp.user.UserRepository;
 
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class AdvertisementService {
     private final AdvertisementRepository advertisementRepository;
@@ -27,7 +28,7 @@ public class AdvertisementService {
     }
 
     public List<AdvertisementDto> getAllDto() {
-        return advertisementRepository.findAll().stream().filter(a -> a != null).filter(a -> a.isActive()).map(p -> advertisementDtoCon.convertToDto(p)).collect(Collectors.toList());
+        return advertisementRepository.findAll().stream().filter(Advertisement::isActive).map(advertisementDtoCon::convertToDto).collect(Collectors.toList());
     }
 
     public ResponseEntity<AdvertisementDto> getById(Long id) {
@@ -121,6 +122,46 @@ public class AdvertisementService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
         Optional<User> user = userRepository.findByEmail(userEmail);
-        return advertisementRepository.findAllByUser(user.get()).stream().map(a->convertToDto(a)).collect(Collectors.toList());
+        return advertisementRepository.findAllByUser(user.get()).stream().filter(Advertisement::isActive).map(this::convertToDto).collect(Collectors.toList());
+    }
+
+    public ResponseEntity<?> setToUnActive(CloseRequest closeRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+        Optional<User> user = userRepository.findByEmail(userEmail);
+        if (user.isPresent()) {
+            Optional<Advertisement> first = advertisementRepository.findAllByUser(user.get()).stream().filter(a -> a.getId().equals(closeRequest.getId())).findFirst();
+            if (first.isPresent()) {
+                first.get().setActive(false);
+                advertisementRepository.save(first.get());
+                return ResponseEntity
+                        .ok()
+                        .body(new MessageResponse("Closed"));
+            }
+        }
+        return ResponseEntity
+                .badRequest()
+                .body(new MessageResponse("Something goes wrong"));
+
+    }
+
+    public ResponseEntity<?> update(AdvertisementDto updatedAdvertisementDto) {
+        Optional<Advertisement> adv = advertisementRepository.findById(updatedAdvertisementDto.getId());
+        if(adv.isPresent()){
+            adv.get().setPicture1(updatedAdvertisementDto.getPicture1());
+            adv.get().setPicture2(updatedAdvertisementDto.getPicture2());
+            adv.get().setPicture3(updatedAdvertisementDto.getPicture3());
+            adv.get().setPicture4(updatedAdvertisementDto.getPicture4());
+            adv.get().setAdvDescription(updatedAdvertisementDto.getDescription());
+            adv.get().setAdvType(updatedAdvertisementDto.getAdvertisementType());
+            advertisementRepository.save(adv.get());
+             return ResponseEntity
+                    .ok()
+                    .body(new MessageResponse("Updated!"));
+        }
+        return ResponseEntity
+                .badRequest()
+                .body(new MessageResponse("Something goes wrong"));
+
     }
 }

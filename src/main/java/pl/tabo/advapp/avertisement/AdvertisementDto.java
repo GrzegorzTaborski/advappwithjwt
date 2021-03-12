@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
 
-@Component
+
 @Getter
 @Setter
 @AllArgsConstructor

@@ -1,6 +1,7 @@
 package pl.tabo.advapp.loadingdata;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -8,7 +9,7 @@ import pl.tabo.advapp.avertisement.AdvertisementRepository;
 import pl.tabo.advapp.user.UserRepository;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AdvertisementAndUserCreator implements CommandLineRunner {
     private UserRepository userRepository;
     private AdvertisementRepository advertisementRepository;

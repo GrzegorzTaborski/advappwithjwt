@@ -1,6 +1,7 @@
 package pl.tabo.advapp.registration;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.tabo.advapp.exception.EmailAlreadyConfirmedException;
@@ -11,7 +12,7 @@ import pl.tabo.advapp.exception.TokenNotFoundException;
 @RestController
 @CrossOrigin("http://localhost:4200")
 @RequestMapping("/register")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RegistrationController {
 
     private final RegistrationService registrationService;

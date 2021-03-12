@@ -1,6 +1,7 @@
 package pl.tabo.advapp.registration;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,7 @@ import pl.tabo.advapp.user.User;
 import pl.tabo.advapp.user.UserService;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RegistrationService {
 
     private final UserService userService;
